@@ -142,6 +142,43 @@ For a consistent backup:
 
 `.gitignore` excludes local databases, session keys (all data contents), uploaded evidence, generated exports, `.env`, virtual environments, logs and Python caches. Only `.gitkeep` placeholders are allowed in the three data directories. Review `git status` and `git ls-files` before committing; ignoring a file does not untrack an already tracked file.
 
+## Download a complete backup / restore
+
+Open **Settings → Full workspace backup → Back Up Now**. Your browser downloads
+`DSTaxMonitor-backup-<UTC timestamp>.zip`. Upload that ZIP to your private Google
+Drive manually. This does not connect the app to Google or send data automatically.
+The ZIP contains all tax years (regardless of the selected year), a consistent
+SQLite snapshot, uploaded document files, existing accountant exports, tax rules,
+and the application source needed to restart it. Temporary downloads are not saved
+in the exports directory, so later backups do not contain previous backup ZIPs.
+
+The SQLite backup API takes a consistent database snapshot while the app runs.
+Finish edits/uploads before clicking the button; it is best to avoid changing
+records until the download completes. A manifest lists checksums and any evidence
+files that were already missing. Missing files cannot be recreated by a backup.
+The ZIP is not encrypted: restrict access in Drive and protect your account.
+
+To recover on another Linux computer, install Python 3.10 or newer, download your
+backup and obtain `restore_backup.py` from the ZIP or a trusted application copy:
+
+```bash
+python3 restore_backup.py /path/to/DSTaxMonitor-backup.zip --destination /path/to/new-empty-folder
+cd /path/to/new-empty-folder
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python app.py
+```
+
+The restore tool verifies every packaged file before writing, rejects unsafe ZIP
+paths, and refuses to overwrite an existing workspace. It validates SQLite integrity,
+restores private file permissions and creates a fresh session key at startup.
+Open http://127.0.0.1:5000 and verify transactions and Tax Vault downloads before
+retiring the old computer or backup. Virtual environments and dependencies are
+reinstalled, not copied. Checksums detect corruption rather than authenticate
+untrusted archives; restore only backups you created. Additional instructions
+are included in `RESTORE.txt` inside each ZIP.
+
 ## Optional isolated demo
 
 The real workspace starts empty. For an isolated demo, stop any server on port 5000 and run:

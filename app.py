@@ -12,6 +12,7 @@ from services.document_service import upload_document, document_path
 from services.readiness_service import readiness
 from services.export_service import export_package, csv_text
 from services.demo_service import seed_demo
+from services.backup_service import create_backup
 NAV=[('dashboard','Dashboard'),('business','Business'),('transactions','Transactions'),('investments','Investments'),('mileage','Mileage'),('tax_vault','Tax Vault'),('tax_estimate','Tax Estimate'),('tax_rules','Tax Rules'),('accountant_export','Accountant Export'),('settings','Settings')]
 TABLE_PAGE={'transactions':'transactions','partners':'business','investment_transactions':'investments','investment_income':'investments','mileage_entries':'mileage','tax_payments':'tax_estimate','review_items':'transactions'}
 
@@ -170,6 +171,21 @@ def create_app(test_config=None):
             flash(f'Imported {len(records)} records. Review before including in estimate. Reimporting creates additional records.','success')
         except ValueError as e: flash(str(e),'error')
         return redirect(url_for(TABLE_PAGE[table]))
+    @app.post('/backup/download')
+    def download_backup():
+        try:
+            stream, filename = create_backup()
+        except (ValueError, OSError) as error:
+            flash(str(error), 'error')
+            return redirect(url_for('settings'))
+        try:
+            response = send_file(stream, mimetype='application/zip', as_attachment=True, download_name=filename)
+            response.call_on_close(stream.close)
+            return response
+        except Exception:
+            stream.close()
+            raise
+
     @app.route('/settings',methods=['GET','POST'])
     def settings():
         if request.method=='POST':
