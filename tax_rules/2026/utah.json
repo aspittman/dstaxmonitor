@@ -1,0 +1,17 @@
+{
+  "tax_year": 2026,
+  "jurisdiction": "Utah",
+  "version": "2026.1-incomplete",
+  "source_name": "Utah Legislature SB 60; Tax Commission draft TC-40",
+  "source_url": "https://le.utah.gov/Session/2026/bills/enrolled/SB0060.pdf",
+  "last_verified": "2026-09-30",
+  "verified": false,
+  "rate_verified": true,
+  "rate": "0.0445",
+  "sources": {
+    "rate": "https://le.utah.gov/Session/2026/bills/enrolled/SB0060.pdf",
+    "credits": "https://files.tax.utah.gov/tax/forms/drafts/tc-40.pdf"
+  },
+  "notes": "Enacted 4.45% rate verified for 2026. Final taxpayer credit parameters and adjustments not verified; draft form is not final authority. Gross tax before credits only; final Utah tax unavailable.",
+  "taxpayer_credit": null
+}

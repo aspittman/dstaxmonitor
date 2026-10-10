@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<section class="panel"><h2>Edit document metadata</h2><form method="post" class="form-grid"><input type="hidden" name="csrf_token" value="{{ csrf_token }}">{% include 'document_fields.html' %}<div class="full"><button>Save metadata</button></div></form></section>{% endblock %}

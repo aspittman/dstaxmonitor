@@ -1,0 +1,16 @@
+data/*
+uploads/*
+exports/*
+!data/.gitkeep
+!uploads/.gitkeep
+!exports/.gitkeep
+.env
+*.db
+*.sqlite*
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.log
+.pytest_cache/
+.coverage

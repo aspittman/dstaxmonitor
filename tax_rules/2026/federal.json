@@ -1,0 +1,245 @@
+{
+  "tax_year": 2026,
+  "jurisdiction": "Federal",
+  "version": "2026.1",
+  "source_name": "IRS Revenue Procedure 2025-32; IRS mileage notices; SSA wage base",
+  "source_url": "https://www.irs.gov/irb/2025-45_IRB",
+  "last_verified": "2026-09-30",
+  "verified": true,
+  "notes": "Verified parameters, not a complete return engine. Standard deduction assumes adult, under 65, not blind, not a dependent. QBI and credits require accountant review. No automatic expense eligibility decisions.",
+  "sources": {
+    "brackets": "https://www.irs.gov/irb/2025-45_IRB",
+    "standard_deduction": "https://www.irs.gov/irb/2025-45_IRB",
+    "capital_gains": "https://www.irs.gov/irb/2025-45_IRB",
+    "capital_netting": "https://www.irs.gov/taxtopics/tc409",
+    "holding_period": "https://www.irs.gov/publications/p544",
+    "mileage": "https://www.irs.gov/irb/2026-04_IRB",
+    "mileage_midyear": "https://www.irs.gov/irb/2026-29_irb",
+    "self_employment": "https://www.irs.gov/pub/irs-prior/p505--2026.pdf",
+    "wage_base": "https://www.ssa.gov/oact/cola/cbb.html",
+    "additional_medicare": "https://www.irs.gov/taxtopics/tc560",
+    "qbi_ceiling": "https://www.irs.gov/newsroom/qualified-business-income-deduction"
+  },
+  "standard_deduction": {
+    "single": 16100,
+    "married_joint": 32200,
+    "married_separate": 16100,
+    "head_household": 24150
+  },
+  "ordinary_brackets": {
+    "single": [
+      {
+        "up_to": 12400,
+        "rate": "0.10"
+      },
+      {
+        "up_to": 50400,
+        "rate": "0.12"
+      },
+      {
+        "up_to": 105700,
+        "rate": "0.22"
+      },
+      {
+        "up_to": 201775,
+        "rate": "0.24"
+      },
+      {
+        "up_to": 256225,
+        "rate": "0.32"
+      },
+      {
+        "up_to": 640600,
+        "rate": "0.35"
+      },
+      {
+        "up_to": null,
+        "rate": "0.37"
+      }
+    ],
+    "married_joint": [
+      {
+        "up_to": 24800,
+        "rate": "0.10"
+      },
+      {
+        "up_to": 100800,
+        "rate": "0.12"
+      },
+      {
+        "up_to": 211400,
+        "rate": "0.22"
+      },
+      {
+        "up_to": 403550,
+        "rate": "0.24"
+      },
+      {
+        "up_to": 512450,
+        "rate": "0.32"
+      },
+      {
+        "up_to": 768700,
+        "rate": "0.35"
+      },
+      {
+        "up_to": null,
+        "rate": "0.37"
+      }
+    ],
+    "married_separate": [
+      {
+        "up_to": 12400,
+        "rate": "0.10"
+      },
+      {
+        "up_to": 50400,
+        "rate": "0.12"
+      },
+      {
+        "up_to": 105700,
+        "rate": "0.22"
+      },
+      {
+        "up_to": 201775,
+        "rate": "0.24"
+      },
+      {
+        "up_to": 256225,
+        "rate": "0.32"
+      },
+      {
+        "up_to": 384350,
+        "rate": "0.35"
+      },
+      {
+        "up_to": null,
+        "rate": "0.37"
+      }
+    ],
+    "head_household": [
+      {
+        "up_to": 17700,
+        "rate": "0.10"
+      },
+      {
+        "up_to": 67450,
+        "rate": "0.12"
+      },
+      {
+        "up_to": 105700,
+        "rate": "0.22"
+      },
+      {
+        "up_to": 201750,
+        "rate": "0.24"
+      },
+      {
+        "up_to": 256200,
+        "rate": "0.32"
+      },
+      {
+        "up_to": 640600,
+        "rate": "0.35"
+      },
+      {
+        "up_to": null,
+        "rate": "0.37"
+      }
+    ]
+  },
+  "capital_gains": {
+    "single": [
+      {
+        "up_to": 49450,
+        "rate": "0"
+      },
+      {
+        "up_to": 545500,
+        "rate": "0.15"
+      },
+      {
+        "up_to": null,
+        "rate": "0.20"
+      }
+    ],
+    "married_joint": [
+      {
+        "up_to": 98900,
+        "rate": "0"
+      },
+      {
+        "up_to": 613700,
+        "rate": "0.15"
+      },
+      {
+        "up_to": null,
+        "rate": "0.20"
+      }
+    ],
+    "married_separate": [
+      {
+        "up_to": 49450,
+        "rate": "0"
+      },
+      {
+        "up_to": 306850,
+        "rate": "0.15"
+      },
+      {
+        "up_to": null,
+        "rate": "0.20"
+      }
+    ],
+    "head_household": [
+      {
+        "up_to": 66200,
+        "rate": "0"
+      },
+      {
+        "up_to": 579600,
+        "rate": "0.15"
+      },
+      {
+        "up_to": null,
+        "rate": "0.20"
+      }
+    ]
+  },
+  "capital_loss_limit": {
+    "single": 3000,
+    "married_joint": 3000,
+    "married_separate": 1500,
+    "head_household": 3000
+  },
+  "mileage": [
+    {
+      "start": "2026-01-01",
+      "end": "2026-06-30",
+      "rate": "0.725",
+      "source": "mileage"
+    },
+    {
+      "start": "2026-07-01",
+      "end": "2026-12-31",
+      "rate": "0.76",
+      "source": "mileage_midyear"
+    }
+  ],
+  "se": {
+    "net_factor": "0.9235",
+    "minimum": 400,
+    "ss_rate": "0.124",
+    "medicare_rate": "0.029",
+    "wage_base": 184500,
+    "deductible_fraction": "0.5",
+    "additional_rate": "0.009",
+    "thresholds": {
+      "single": 200000,
+      "married_joint": 250000,
+      "married_separate": 125000,
+      "head_household": 200000
+    }
+  },
+  "qbi_basic_ceiling_rate": "0.20"
+}
