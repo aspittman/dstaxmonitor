@@ -1,5 +1,6 @@
 import io
 import csv
+import re
 import tempfile
 import unittest
 import zipfile
@@ -36,6 +37,36 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(self.client.post('/demo/seed').status_code,400)
         self.assertEqual(self.client.post('/demo/seed',data={'csrf_token':self.token},headers={'Origin':'https://attacker.example'}).status_code,403)
         r=self.client.get('/');self.assertEqual(r.headers['Cache-Control'],'no-store');self.assertIn("frame-ancestors 'none'",r.headers['Content-Security-Policy'])
+    def test_settings_save_with_local_browser_origins(self):
+        form=dict(csrf_token=self.token,tax_year='2026',filing_status='married_joint',
+                  classification='partnership',business_name='DevSpace Technologies LLC',
+                  se_mode='unknown',other_income='75000')
+        for origin in ['http://localhost', 'http://localhost:80', 'http://127.0.0.1', 'http://[::1]', 'null']:
+            response=self.client.post('/settings',data=form,headers={'Origin':origin},follow_redirects=True)
+            self.assertEqual(response.status_code,200,origin)
+            self.assertIn(b'Settings saved',response.data)
+        with self.app.app_context():
+            record=get_db().execute('SELECT filing_status,other_income FROM settings WHERE tax_year=2026').fetchone()
+            self.assertEqual(record['filing_status'],'married_joint')
+            self.assertEqual(record['other_income'],'75000')
+        page=self.client.get('/settings',base_url='http://127.0.0.1:5000')
+        token=re.search(rb'name="csrf_token" value="([^"]+)"',page.data).group(1).decode()
+        response=self.client.post('/settings',base_url='http://127.0.0.1:5000',
+            data={**form,'csrf_token':token},headers={'Origin':'http://127.0.0.1:5000'})
+        self.assertEqual(response.status_code,302)
+
+    def test_invalid_origins_still_rejected_with_valid_csrf(self):
+        for origin in ['http://localhost:5001','https://localhost',
+                       'http://localhost.attacker.example','http://user@localhost',
+                       'http://localhost/not-an-origin','http://localhost:invalid']:
+            response=self.client.post('/settings',data={'csrf_token':self.token},headers={'Origin':origin})
+            self.assertEqual(response.status_code,403,origin)
+            self.assertIn(b'browser origin does not match',response.data)
+        response=self.client.post('/settings',headers={'Origin':'http://localhost'})
+        self.assertEqual(response.status_code,400)
+        response=self.client.post('/settings',headers={'Origin':'null'})
+        self.assertEqual(response.status_code,400)
+
     def test_upload_view_download_and_association(self):
         self.seed()
         with self.app.app_context():tid=get_db().execute("SELECT id FROM transactions WHERE type='Expense' LIMIT 1").fetchone()[0]

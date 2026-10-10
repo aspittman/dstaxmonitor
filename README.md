@@ -127,7 +127,7 @@ CSV text beginning with spreadsheet formula characters is prefixed with an apost
 
 **This contains sensitive financial information. Do not expose it to the public internet, bind it to `0.0.0.0`, port-forward it, or place it behind a public tunnel/proxy.** It is intended for a trusted single-user local computer, with no authentication or multi-user permissions.
 
-The server binds to `127.0.0.1`. Independent Host and peer-IP checks reject external access and DNS-rebinding hosts. CSRF tokens, same-origin checks, Strict/HttpOnly cookies, a restrictive content policy, frame blocking and no-store headers protect local browser workflows. No external fonts, scripts or integrations load. Do not override these protections to publish it. The development server is used only for this local application.
+The server binds to `127.0.0.1`. Independent Host and peer-IP checks reject external access and DNS-rebinding hosts. Session-bound CSRF tokens, local-origin checks (with token validation for privacy browsers sending an opaque origin), Strict/HttpOnly cookies, a restrictive content policy, frame blocking and no-store headers protect local browser workflows. No external fonts, scripts or integrations load. Do not override these protections to publish it. The development server is used only for this local application.
 
 Data directories are restricted to the OS user, database/session key/uploads/ZIP files have private permissions, but **data is not encrypted at rest**. Use disk encryption, a locked OS account and encrypted backups. Other processes running as your user can read the data. Do not run on an untrusted/shared account. PDF/image validation is not malware scanning or an SSN detector; upload trusted redacted documents only.
 
@@ -202,3 +202,14 @@ Tests isolate databases/documents/exports in temporary directories. Fixed financ
 Services separate routes, financial calculations, business, investment classification, state rules, records/adapters, document storage, readiness and exports. The next priority is an accountant-reviewed final 2026 Utah rule set and full state adjustment/credit coverage, followed by reviewed QBI calculation and broader return assumptions.
 
 Future Alpaca/bank imports, OCR, receipt matching, monthly close, reminders, backups and form preparation should implement tested adapters/services with explicit review states. No live brokerage, cloud backup, email, form generation, tax-software integration or e-filing is implemented in V1.
+
+### Settings save / Forbidden troubleshooting
+
+Use `http://127.0.0.1:5000` directly. After updating the app, stop it with Ctrl+C,
+restart with `python app.py`, and reload Settings so its session token is fresh.
+Personal taxable income, including taxable W-2 wages, is entered in Settings.
+Business income is entered as an Income transaction, not duplicated in Settings.
+The local-access checks accept loopback aliases with the same scheme and port,
+and use the mandatory session-bound CSRF token when privacy tools hide the Origin
+header. External hosts, ports, origins and peers remain blocked. Forbidden errors
+identify the failed access check; invalid/missing tokens ask you to reload.

@@ -13,6 +13,7 @@ from services.readiness_service import readiness
 from services.export_service import export_package, csv_text
 from services.demo_service import seed_demo
 from services.backup_service import create_backup
+from services.local_security import LOCAL_HOSTS, local_origin_matches
 NAV=[('dashboard','Dashboard'),('business','Business'),('transactions','Transactions'),('investments','Investments'),('mileage','Mileage'),('tax_vault','Tax Vault'),('tax_estimate','Tax Estimate'),('tax_rules','Tax Rules'),('accountant_export','Accountant Export'),('settings','Settings')]
 TABLE_PAGE={'transactions':'transactions','partners':'business','investment_transactions':'investments','investment_income':'investments','mileage_entries':'mileage','tax_payments':'tax_estimate','review_items':'transactions'}
 
@@ -34,13 +35,18 @@ def create_app(test_config=None):
     @app.before_request
     def local_only():
         # Host check prevents DNS rebinding; address check rejects external peers even if misbound.
-        if request.remote_addr not in ['127.0.0.1','::1']: abort(403)
+        if request.remote_addr not in ['127.0.0.1','::1']:
+            abort(403, description='DSTaxMonitor accepts connections only from this computer. Open http://127.0.0.1:5000 directly.')
         try: host=urlsplit('http://'+request.host).hostname
-        except ValueError: abort(403)
-        if host not in ['localhost','127.0.0.1','::1']: abort(403)
+        except ValueError: abort(403, description='Invalid local server address.')
+        if host not in LOCAL_HOSTS:
+            abort(403, description='This server address is not allowed. Open http://127.0.0.1:5000 directly.')
         if request.method in ['POST','PUT','PATCH','DELETE']:
             origin=request.headers.get('Origin')
-            if origin and origin!=request.host_url.rstrip('/'): abort(403)
+            # Privacy tools may send an opaque Origin ('null'). A valid session-bound
+            # CSRF token remains mandatory, so hiding Origin cannot bypass protection.
+            if origin and origin != 'null' and not local_origin_matches(origin, request.host_url):
+                abort(403, description='The browser origin does not match this local server. Open http://127.0.0.1:5000 directly, reload Settings, and save again. A proxy, tunnel, or browser privacy setting may be changing the request origin.')
             token=session.get('csrf_token')
             if not token or not secrets.compare_digest(token,request.form.get('csrf_token','')): abort(400,description='Invalid request token. Reload the page.')
         session.setdefault('csrf_token',secrets.token_hex(32))
